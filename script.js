@@ -3,7 +3,7 @@
     const ctx = canvas.getContext("2d")
 
     canvas.width = 500;
-    canvas.height = 600;
+    canvas.height = 650;
 
 // player image
     const playerImage = new Image ();           // player ke liye ek img object banata hai
@@ -15,13 +15,23 @@
     const bulletImage = new Image();    // bullet ki image
     bulletImage.src = "assets/bullet.png";
 
+    const shootSound = new Audio("assets/shoot.wav");    // shhot sound lagaane ke liye
+
+    const hitSound = new Audio("assets/hit.wav");       // hit sound lagaane ke liye
+
+    // const explosionImage = new Image();
+    // explosionImage.src = "assets/explosion.png";
+
+    // const background = new Image();
+    // background.src = "assets/back.png";
+
     //player
 
     const player = {
         x : 375,
         y : 500 ,
-        width : 50,
-        height : 60,
+        width : 80,
+        height : 90,
     } ;
 
     playerImage.onload = function(){
@@ -72,36 +82,76 @@
 
             const bullets = [];     // for creating bullets
             const enemies = [];       // for creating enemies 
+            // const explosion = [];   // for creating exlosion img, to load actual img of explosion
             
-            let score = 0;  // game starrt me score 0 hai
-            let lives = 3 ;  // lives dene ke liye
-            let gameOver = false ; 
+            let score = 0;         // game starrt me score 0 hai
+            let lives = 3 ;         // lives dene ke liye
+            let gameOver = false ;   // game over ho jaaye to game end ke liye
+            let paused = false;      // game initially paused nhi hoga
+            let highScore = localStorage.getItem("highScore") || 0 ;    // browser se previous high score nikalta hai  . || 0 , first time game chal rha hai to high score ko zero bna dega
+            let gameStarted = false ;            // starting me game start na ho
 
         document.addEventListener("keydown", function(event) {
+
+            if(event.code === "KeyR" && gameOver ){       // press r to resume 
+
+                score = 0;
+                lives = 3;
+                level = 1;
+
+                enemies.length = 0;
+                bullets.length = 0;
+
+                player.x = 375 ;
+                player.y = 500 ;
+
+                gameOver = false;
+
+                gameLoop();
+            }
+
+            if(event.code === "Enter" && !gameStarted ){        // press enter key working to start game
+
+                gameStarted = true;
+                gameLoop()
+            }
+
+            if(event.code === "KeyP" && !gameOver){
+                paused = !paused;                               // false and true = Pause
+                                                                // true and false = Resume
+                if(!paused)                                     // jab dobara key pree krogo paused = true , p press / paused = false / gameloop start again
+                    gameLoop();
+            }
+
+            keys[event.code] = true ;
+
 
             if(event.code === "Space") {
                 event.preventDefault();
 
                 const bullet = {
-                    x: player.x + player.width / 2 - 5,
+                    x: player.x + player.width / 2 - 20.5,       // isase bullet player ki center se niklegi
                     y: player.y,
-                    width: 10,
-                    height: 20
+                    width: 60,
+                    height: 50
                 };
 
                 bullets.push(bullet);
+
+                shootSound.currentTime = 0;
+                shootSound.play();                       // for space dabaane par turan sound aayen
             }
 
         });
         
-        // for creating enemy 
+        // for creating enemy , enemy object
         function createEnemy(){
 
             const enemy = {
                 x : Math.random()* (canvas.width - 50),
                 y : -60,
-                width : 50,
-                height: 50,
+                width : 100,
+                height: 60,
                 speed : 3
             };
             enemies.push(enemy)
@@ -109,7 +159,7 @@
 
         // for player update function , player ki position
 
-        function updatePlayer(){
+        function updatePlayer(){       // deltatime function me player ko delta time dene ke liye diys h
 
             if (keys ["ArrowLeft"]){
                 player.x -= 5;
@@ -147,15 +197,31 @@
              if(player.y + player.height > canvas.height){
                 player.y = canvas.height - player.height;
              }
-        }
+         }
+
 
         // game loop 
     function gameLoop(){
 
-        if(gameOver){               // jab game over go jaye
-            ctx.clearRect(0,0, canvas.width , canvas.height)  // Game Over hone par purana game screen clear karega.
+        if(!gameStarted){
+
+            ctx.clearRect(0,0, canvas.width , canvas.height);
 
             ctx.fillStyle = "white";
+            ctx.font = "40px Arial";
+            ctx.fillText("SPACE SHOOTER" , 100 , 280);
+
+            ctx.font = "20px Arial";
+            ctx.fillText("Press Enter to Start", 150 , 320);
+
+            return;
+        }
+
+        
+        if(gameOver){               // existing game over ho jaye
+            ctx.clearRect(0,0, canvas.width , canvas.height)  // Game Over hone par purana game screen clear karega.
+
+            ctx.fillStyle = "red";
             ctx.font = "40px Arial";
             ctx.fillText("GAME OVER ", 140 ,280);
 
@@ -164,6 +230,16 @@
 
             return ;
         }
+
+        if(paused){                   // if paused === true , to game loop yhi par rook jaayega . so player , enemy , bullet , score nhi chlega , 
+            ctx.fillStyle = "Green";
+            ctx.font = "40px Arial";
+            ctx.fillText("PAUSED" , 175 ,280);
+
+            ctx.font = "20px Arial";
+            ctx.fillText("Press P to Resume", 160 , 320);
+            return ;
+        }        
 
 
         updatePlayer();
@@ -181,9 +257,9 @@
            
         )
 
-        for(let i =0 ; i <bullets.length ; i++){
-            bullets[i].y -= 8;
+        for(let i = bullets.length - 1 ; i >= 0 ; i--){                 // i = bullets.length - 1
 
+            bullets[i].y -=  8;    // delta time ke liye hai ye   ,, //se reverse direction me chala rahe hain. Ye deletion ke liye safer hai.
             ctx.drawImage(
                 bulletImage,
                 bullets[i].x,
@@ -191,10 +267,14 @@
                 bullets[i].width,
                 bullets[i].height,
             );
+            // bullet canvas ke bahar chali gyi aur usko hta do
+            if(bullets[i].y + bullets[i].height < 0){
+                bullets.splice(i,1);                 // agar bullets screen se bahr hai to arr se remove kro
+            }
 
         }
 
-        // for drawing enemies
+        // for drawing enemies (loop)
         for ( let i = 0 ; i < enemies.length ; i++){
 
             enemies[i].y += enemies[i].speed ;
@@ -213,7 +293,8 @@
             if(enemies[i].y > canvas.height ){
                 enemies.splice ( i,1);
                 i-- ;
-            }
+            } 
+            else{
 
             if(
                 player.x < enemies[i].x + enemies[i].width &&
@@ -231,7 +312,8 @@
             }
 
             if (lives <= 0){            // e geame over kerne ke liye hai
-                gameOver = true ;        
+                gameOver = true ;  
+              }      
             }
         }
 
@@ -254,7 +336,18 @@
                     
                     bullets.splice( i , 1);  // to remove bullets 
                     score += 10 ;           // give score after enemy destroy
-                    enemies.splice( j ,1);    // to remove enemy
+
+                    hitSound.currentTime = 0 ;  // jab bullet enemy ko hit krega to hit.wav bjega
+                    hitSound.play() ;
+
+                    if(score > highScore){
+                        highScore = score;
+
+                        localStorage.setItem("highScore",highScore);
+                    }
+
+                    enemies.splice( j ,1);    // to remove enemy if hitted
+
 
                     break;    // ek bulleta ek enemy ko hit kr diya to usko aur enemy ki jrurat nhi
                 }
@@ -264,6 +357,8 @@
         ctx.fillStyle = "white";
         ctx.font = "20px Arial";
         ctx.fillText ("Score :" + score , 20 ,30)    // Canvas par text likhta hai., ctx.fillText / "Score :" +score , 20 , 30);score ki current value screen pr dikhaaye ga 
+
+        ctx.fillText("High Score : "  + highScore, 20,80);
 
         ctx.fillStyle = "white";
         ctx.font = "20px Arial";
@@ -281,7 +376,7 @@
                 if(enemies.length < 5)
                 createEnemy();
 
-            }, 1500 );
+            }, 500 );
 
     // start game
     gameLoop();
