@@ -46,45 +46,52 @@
         // keyboard movement
 
 
-            const keys = {};               // store which button is pressed
+      const keys = {};               // store which button is pressed
 
-            document.getElementById("leftBtn").addEventListener("touchStart", function(){                       // jab phone par left button ko touch kro to e f(c)
-                keys["ArrowLeft"] = true ;
-            })
+    // LEFT BUTTON
+    document.getElementById("leftBtn").addEventListener("touchstart", function() {
+        keys["ArrowLeft"] = true;
+    });
 
-
-            document.getElementById("leftBtn").addEventListener("touchend", function(){                         // ka mtlb finger button se ht diya hai
-                keys["ArrowLeft"] = false ;                                                                     // left button ab press nhi ho rha hai , isliye player left jaana band kr diya hai
-            })
-
-
-            document.getElementById("rightBtn").addEventListener("touchStart", function(){
-                keys["ArrowLeft"] = true ;
-            })
-
-            
-            document.getElementById("rightBtn").addEventListener("touchend", function(){
-                keys["ArrowLeft"] = false ;
-            })
-
-            // phone par button touch krne par shoot hona chahiye
-
-            document.getElementById("shootBtn").addEventListener("touchstart", function(){
-              
-                const bullet = {                                                                // new bullet object bnega
-                      x : player.x + pllayer.width / 2 - 20.5 ,
-                      width: 60 ,
-                      height: 50  
-                };
-
-                bullets.push(bullet);                                               // bullet array me add hogi
-
-                shootSound.currentTime = 0 ;
-                shootSound.play();
-            });
+    document.getElementById("leftBtn").addEventListener("touchend", function() {
+        keys["ArrowLeft"] = false;
+    });
 
 
-            document.addEventListener("keydown" , function(event){                  // jab ketboardki koi key press hui to e fx execute hoga
+    // RIGHT BUTTON
+    document.getElementById("rightBtn").addEventListener("touchstart", function() {
+        keys["ArrowRight"] = true;
+    });
+
+    document.getElementById("rightBtn").addEventListener("touchend", function() {
+        keys["ArrowRight"] = false;
+    });
+
+
+    // SHOOT BUTTON
+    document.getElementById("shootBtn").addEventListener("touchstart", function() {
+
+        if (gameStarted && !gameOver) {
+
+            const bullet = {
+                x: player.x + player.width / 2 - 10,
+                y: player.y,
+                width: 20,
+                height: 30,
+                speed: 8
+            };
+
+            bullets.push(bullet);
+
+            shootSound.currentTime = 0;
+            shootSound.play();
+        }
+
+    });
+
+
+
+   document.addEventListener("keydown" , function(event){                  // jab ketboardki koi key press hui to e fx execute hoga
 
                 if(event.code === "KeyR" && gameOver){
 
@@ -139,38 +146,23 @@
             });
 
         document.getElementById("restartBtn").addEventListener("touchstart", function() {
-            score = 0;
-            lives = 3;
-            gameOver = false;
-            paused = false;
+        score = 0;
+        lives = 3;
+        gameOver = false;
+        paused = false;
 
-            bullets = [];
-            enemies = [];
+        bullets.length = [];
+        enemies.length = [];
 
-            player.x = 375;
-            player.y = 500;
+        player.x = 375;
+        player.y = 500;
 
-            gameStarted = true;
-            gameLoop();
-        });
+        gameStarted = true;
+        gameLoop();
+    });
 
 
-        document.getElementById("leftBtn").addEventListener("touchstart", function() {
-                keys["ArrowLeft"] = true;
-            });
-
-        document.getElementById("leftBtn").addEventListener("touchend", function() {
-                keys["ArrowLeft"] = false;
-            });
-
-        document.getElementById("rightBtn").addEventListener("touchstart", function() {
-                keys["ArrowRight"] = true;
-            });
-
-       document.getElementById("rightBtn").addEventListener("touchend", function() {
-                keys["ArrowRight"] = false;
-            });
-
+    
          document.getElementById("shootBtn").addEventListener("touchstart", function() {
                 if (gameStarted && !gameOver) {
                     bullets.push({

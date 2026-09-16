@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Space Shooter</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>Space shooter</h1>
-    <canvas id="gameCanvas"></canvas>
-    <div class = "controls">
-         <buttons id = "startBtn"> START </buttons>
-         <button id="restartBtn">RESTART</button>
-        <buttons id = "leftBtn"> <- </buttons>
-        <buttons id = "shootBtn">🔥</buttons>
-        <buttons id = "rightBtn"> -> </buttons>
+
+    <h1>Space Shooter</h1>
+
+    <div class="gameArea">
+
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="gameButtons">
+
+            <button id="startBtn">START</button>
+
+            <button id="restartBtn">RESTART</button>
+
+        </div>
+
     </div>
-    <script src ="script.js"></script>
+
+    <div class="controls">
+
+        <button id="leftBtn"><<<</button>
+
+        <button id="shootBtn"> 🔥 </button>
+
+        <button id="rightBtn"> >>>  </button>
+
+    </div>
+
+    <script src="script.js"></script>
+
 </body>
+
 </html>

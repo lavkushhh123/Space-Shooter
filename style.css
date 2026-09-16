@@ -1,40 +1,108 @@
-body{
+body {
     margin: 0;
     background-color: black;
     color: white;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-    height: 600;
+
     background-image: url("assets/back.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-canvas{
-    border : 2px solid white;
+
+/* Canvas + Start Restart */
+
+.gameArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+
+canvas {
+    border: 2px solid white;
     background-color: #050505;
 
-    width : 90vw;
-    max-width: 500px;
+    width: min(70vw , 500px);
     height: auto;
+
+    display: block;
 }
+
+h1 {
+    color: white;
+    font-size: 30px;
+
+    background-color: #17175c;
+    border: 2px solid #6c63ff;
+    border-radius: 8px;
+
+    padding: 8px 20px;
+    display: inline-block;
+
+    margin-right: 13%;
+}
+
+
+/* Start Restart buttons */
+
+.gameButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gameButtons button {
+    font-size: clamp(14px, 2.5vw, 18px);
+;
+    padding: 12px 18px;
+
+    background-color: #17175c;
+    color: white;
+
+    border: 2px solid #6c63ff;
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+
+.gameButtons button:hover {
+    background-color: #29298a;
+}
+
+
+/* Mobile controls */
 
 .controls {
-    margin-top : 15px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-right: 15%;
 }
+
 
 .controls button {
-    font-size: 35px;
-    width: 100px;
-    height: 80px;
-    margin: 8px;
-    border-radius: 15px;
+    font-size: clamp(24px, 6vw, 35px);
+
+
+    width: clamp(65px, 18vw, 90px);
+    height: clamp(55px, 15vw, 70px);
+
+    background-color: #17175c;
+    color: white;
+
+    border: 2px solid #6c63ff;
+    border-radius: 8px;
+
+    cursor: pointer;
 }
 
-#startBtn ,
-#restartBtn {
-    width: 180px;
-    height: 80px;
-    font-size: 30px;
+.controls button:hover {
+    background-color: #29298a;
 }
