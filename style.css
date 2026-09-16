@@ -34,7 +34,7 @@ canvas {
 
 h1 {
     color: white;
-    font-size: 30px;
+    font-size: 20px;
 
     background-color: #17175c;
     border: 2px solid #6c63ff;
@@ -88,7 +88,7 @@ h1 {
 
 
 .controls button {
-    font-size: clamp(24px, 6vw, 35px);
+    font-size: clamp(20px, 4vw, 25px);
 
 
     width: clamp(65px, 18vw, 90px);
