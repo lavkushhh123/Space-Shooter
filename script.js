@@ -3,7 +3,7 @@
     const ctx = canvas.getContext("2d")
 
     canvas.width = 500;
-    canvas.height = 650;
+    canvas.height = 600;
 
 // player image
     const playerImage = new Image ();           // player ke liye ek img object banata hai
