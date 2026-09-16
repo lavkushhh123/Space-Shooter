@@ -25,8 +25,15 @@ canvas{
 }
 
 .controls button {
-    font-size: 25px;
-    width: 70px;
-    height: 60px;
-    margin: 5px;
+    font-size: 35px;
+    width: 100px;
+    height: 80px;
+    margin: 8px;
+    border-radius: 15px;
+}
+
+#startBtn {
+    width: 180px;
+    height: 80px;
+    font-size: 30px;
 }

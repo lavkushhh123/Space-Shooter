@@ -127,6 +127,18 @@
             let highScore = localStorage.getItem("highScore") || 0 ;                     // browser se previous high score nikalta hai  . || 0 , first time game chal rha hai to high score ko zero bna dega
             let gameStarted = false ;                                    // starting me game start na ho
 
+            // PHONE START BUTTON 
+
+            document.getElementById("startBtn").addEventListener("touchstart", function(){
+
+                if (!gameStarted){                                                      // it will check game isn't started yet
+                    gameStarted = true ;
+                    gameLoop();
+                }
+
+            });
+
+
         document.addEventListener("keydown", function(event) {
 
             if(event.code === "KeyR" && gameOver ){       // press r to resume 
