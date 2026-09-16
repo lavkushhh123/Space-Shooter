@@ -19,3 +19,14 @@ canvas{
     max-width: 500px;
     height: auto;
 }
+
+.controls {
+    margin-top : 15px;
+}
+
+.controls button {
+    font-size: 25px;
+    width: 70px;
+    height: 60px;
+    margin: 5px;
+}

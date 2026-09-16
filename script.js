@@ -15,13 +15,12 @@
     const bulletImage = new Image();    // bullet ki image
     bulletImage.src = "assets/bullet.png";
 
-    const shootSound = new Audio("assets/shoot.wav");    // shhot sound lagaane ke liye
+    const shootSound = new Audio("assets/shoot.wav");    // shoot sound lagaane ke liye
 
     const hitSound = new Audio("assets/hit.wav");       // hit sound lagaane ke liye
 
     // const explosionImage = new Image();
     // explosionImage.src = "assets/explosion.png";
-
     // const background = new Image();
     // background.src = "assets/back.png";
 
@@ -47,8 +46,45 @@
         // keyboard movement
 
 
-            const keys = {};   // storee which button is pressed
-            document.addEventListener("keydown" , function(event){
+            const keys = {};               // store which button is pressed
+
+            document.getElementById("leftBtn").addEventListener("touchStart", function(){                       // jab phone par left button ko touch kro to e f(c)
+                keys["ArrowLeft"] = true ;
+            })
+
+
+            document.getElementById("leftBtn").addEventListener("touchend", function(){                         // ka mtlb finger button se ht diya hai
+                keys["ArrowLeft"] = false ;                                                                     // left button ab press nhi ho rha hai , isliye player left jaana band kr diya hai
+            })
+
+
+            document.getElementById("rightBtn").addEventListener("touchStart", function(){
+                keys["ArrowLeft"] = true ;
+            })
+
+            
+            document.getElementById("rightBtn").addEventListener("touchend", function(){
+                keys["ArrowLeft"] = false ;
+            })
+
+            // phone par button touch krne par shoot hona chahiye
+
+            document.getElementById("shootBtn").addEventListener("touchstart", function(){
+              
+                const bullet = {                                                                // new bullet object bnega
+                      x : player.x + pllayer.width / 2 - 20.5 ,
+                      width: 60 ,
+                      height: 50  
+                };
+
+                bullets.push(bullet);                                               // bullet array me add hogi
+
+                shootSound.currentTime = 0 ;
+                shootSound.play();
+            });
+
+
+            document.addEventListener("keydown" , function(event){                  // jab ketboardki koi key press hui to e fx execute hoga
 
                 if(event.code === "KeyR" && gameOver){
 
@@ -66,10 +102,10 @@
                     gameLoop();    // game loop dobara start
                 }
 
-                keys[event.code] =true ;   // Isi wajah se move + shoot simultaneously possible hoga.
+                keys[event.code] = true ;                // Isi wajah se move + shoot simultaneously possible hoga.
 
                 if( event.code == "Space"){
-                    event.preventDefault()
+                    event.preventDefault()                  // browser ka default action prevent krta hai
                 }
             });
 
@@ -84,12 +120,12 @@
             const enemies = [];       // for creating enemies 
             // const explosion = [];   // for creating exlosion img, to load actual img of explosion
             
-            let score = 0;         // game starrt me score 0 hai
-            let lives = 3 ;         // lives dene ke liye
-            let gameOver = false ;   // game over ho jaaye to game end ke liye
-            let paused = false;      // game initially paused nhi hoga
-            let highScore = localStorage.getItem("highScore") || 0 ;    // browser se previous high score nikalta hai  . || 0 , first time game chal rha hai to high score ko zero bna dega
-            let gameStarted = false ;            // starting me game start na ho
+            let score = 0;                                            // game starrt me score 0 hai
+            let lives = 3 ;                                              // lives dene ke liye
+            let gameOver = false ;                                    // game over ho jaaye to game end ke liye
+            let paused = false;                                      // game initially paused nhi hoga
+            let highScore = localStorage.getItem("highScore") || 0 ;                     // browser se previous high score nikalta hai  . || 0 , first time game chal rha hai to high score ko zero bna dega
+            let gameStarted = false ;                                    // starting me game start na ho
 
         document.addEventListener("keydown", function(event) {
 
@@ -99,7 +135,7 @@
                 lives = 3;
                 level = 1;
 
-                enemies.length = 0;
+                enemies.length = 0;                  // isse arr empty ho jaate h. means all exhisting enemies and bullets removed
                 bullets.length = 0;
 
                 player.x = 375 ;
@@ -136,9 +172,9 @@
                     height: 50
                 };
 
-                bullets.push(bullet);
+                bullets.push(bullet);                   // array  ke end me new bullets add krta hai
 
-                shootSound.currentTime = 0;
+                shootSound.currentTime = 0;              // sound ko beginning me reset karta hai
                 shootSound.play();                       // for space dabaane par turan sound aayen
             }
 
@@ -148,21 +184,21 @@
         function createEnemy(){
 
             const enemy = {
-                x : Math.random()* (canvas.width - 50),
+                x : Math.random()* (canvas.width - 50),                // enemy random position se enter krenge
                 y : -60,
                 width : 100,
                 height: 60,
-                speed : 3
+                speed : Math.random()* 5 + 2
             };
-            enemies.push(enemy)
+            enemies.push(enemy)           // arr ke  end me new eenmy  add krega
         }
 
         // for player update function , player ki position
 
-        function updatePlayer(){       // deltatime function me player ko delta time dene ke liye diys h
+        function updatePlayer(){       // player ki position decide krta hai
 
             if (keys ["ArrowLeft"]){
-                player.x -= 5;
+                player.x -= 5;                    // for smooth movement , jab tk key pree h movement hoti rhegi
             }
 
             if(keys["ArrowRight"]){
@@ -259,7 +295,7 @@
 
         for(let i = bullets.length - 1 ; i >= 0 ; i--){                 // i = bullets.length - 1
 
-            bullets[i].y -=  8;    // delta time ke liye hai ye   ,, //se reverse direction me chala rahe hain. Ye deletion ke liye safer hai.
+            bullets[i].y -=  8;             // to fire bullets on upward dire //se reverse direction me chala rahe hain. Ye deletion ke liye safer hai.
             ctx.drawImage(
                 bulletImage,
                 bullets[i].x,
@@ -277,7 +313,7 @@
         // for drawing enemies (loop)
         for ( let i = 0 ; i < enemies.length ; i++){
 
-            enemies[i].y += enemies[i].speed ;
+            enemies[i].y += enemies[i].speed ;                      // this updates the enemy's vertical position every frame, so the enemy moves downward."
 
             //ctx.fillStyle = "red" ;
 
@@ -326,10 +362,10 @@
 
                 // actual collision ddetection, check whether bullets and enemy touching each other
                 if(
-                    bullets[i].x < enemies[j].x + enemies[j].width && 
-                    bullets[i].x + bullets[i].width > enemies[j].x &&  // bullet ka right side enemy ke left side se gya ya nhi
-                    bullets[i].y < enemies[j].y + enemies[j].height && 
-                    bullets[i].y + bullets[i].height > enemies[j].y     // Bullet ka bottom enemy ke top se neeche gaya ya nahi.
+                    bullets[i].x < enemies[j].x + enemies[j].width &&           // bullet ka left side ennemy ke right side se phle hai
+                    bullets[i].x + bullets[i].width > enemies[j].x &&          // bullet ka right side enemy ke left side ke bdd hai
+                    bullets[i].y < enemies[j].y + enemies[j].height &&         // bullet ka bottom enemy ke top se neeche hai
+                    bullets[i].y + bullets[i].height > enemies[j].y           // Bullet ka bottom enemy ke top se neeche gaya ya nahi. , charo true hone pr collision hoga 
 
                 )
                  {
@@ -346,7 +382,7 @@
                         localStorage.setItem("highScore",highScore);
                     }
 
-                    enemies.splice( j ,1);    // to remove enemy if hitted
+                    enemies.splice( j ,1);            // to remove enemy if hitted, removing element fron array
 
 
                     break;    // ek bulleta ek enemy ko hit kr diya to usko aur enemy ki jrurat nhi
@@ -376,7 +412,7 @@
                 if(enemies.length < 5)
                 createEnemy();
 
-            }, 500 );
+            }, 1000 );
 
     // start game
     gameLoop();
