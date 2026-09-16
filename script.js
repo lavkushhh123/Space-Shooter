@@ -138,7 +138,56 @@
 
             });
 
+        document.getElementById("restartBtn").addEventListener("touchstart", function() {
+            score = 0;
+            lives = 3;
+            gameOver = false;
+            paused = false;
 
+            bullets = [];
+            enemies = [];
+
+            player.x = 375;
+            player.y = 500;
+
+            gameStarted = true;
+            gameLoop();
+        });
+
+
+        document.getElementById("leftBtn").addEventListener("touchstart", function() {
+                keys["ArrowLeft"] = true;
+            });
+
+        document.getElementById("leftBtn").addEventListener("touchend", function() {
+                keys["ArrowLeft"] = false;
+            });
+
+        document.getElementById("rightBtn").addEventListener("touchstart", function() {
+                keys["ArrowRight"] = true;
+            });
+
+       document.getElementById("rightBtn").addEventListener("touchend", function() {
+                keys["ArrowRight"] = false;
+            });
+
+         document.getElementById("shootBtn").addEventListener("touchstart", function() {
+                if (gameStarted && !gameOver) {
+                    bullets.push({
+                        x: player.x + player.width / 2 - 10,
+                        y: player.y,
+                        width: 20,
+                        height: 30,
+                        speed: 8
+                    });
+
+                        shootSound.currentTime = 0;
+                        shootSound.play();
+                }
+            });
+
+
+            // KEYBOARD FUNCTIONING BUTTONS
         document.addEventListener("keydown", function(event) {
 
             if(event.code === "KeyR" && gameOver ){       // press r to resume 
@@ -210,19 +259,19 @@
         function updatePlayer(){       // player ki position decide krta hai
 
             if (keys ["ArrowLeft"]){
-                player.x -= 5;                    // for smooth movement , jab tk key pree h movement hoti rhegi
+                player.x -= 10;                    // for smooth movement , jab tk key pree h movement hoti rhegi
             }
 
             if(keys["ArrowRight"]){
-                player.x += 5;
+                player.x += 10;
             }
 
             if(keys["ArrowUp"]){
-                player.y -= 5;
+                player.y -= 10;
             }
 
             if(keys["ArrowDown"]){
-                player.y += 5;
+                player.y += 10;
             }
 
             // LEFT BOUNDRY

@@ -32,7 +32,8 @@ canvas{
     border-radius: 15px;
 }
 
-#startBtn {
+#startBtn ,
+#restartBtn {
     width: 180px;
     height: 80px;
     font-size: 30px;
